@@ -7,7 +7,7 @@ const nodemailer = require('nodemailer');
 
     function send_mail (subject, body, to, files) 
     {
-        console.dir(subject, body, to);
+        console.log('send_mail: subject:', subject, 'to', to)
         // Create a SMTP transporter object
         let transporter = nodemailer.createTransport(
             {
@@ -47,8 +47,7 @@ const nodemailer = require('nodemailer');
 
         transporter.sendMail(msg, (error, info) => {
             if (error) {
-                console.log('Error occurred');
-                console.log(error.message);
+                console.log('send_mail: Error occurred: [', error.message, '], to: [' + to + '], subject [' + subject + ']');
                 return process.exit(1);
             }
 

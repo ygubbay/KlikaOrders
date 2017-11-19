@@ -29,7 +29,7 @@ var file_ops = require('./remove_folder_contents');
 var orders = require('./orders');
 
 
-mailer.SendMail('KlikaOrders started', 'server was started at ' + new Date().toString('yyyyMMdd hhmm'), 'Yehuda gubbay <ygubbay@gmail.com>');
+//mailer.SendMail('KlikaOrders started', 'server was started at ' + new Date().toString('yyyyMMdd hhmm'), 'Yehuda gubbay <ygubbay@gmail.com>');
 
 
 //console.log('\nweb server running on port', config.api_port);

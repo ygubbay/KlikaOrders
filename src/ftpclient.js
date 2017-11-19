@@ -6,7 +6,7 @@
   function check_ftp_folder() {
   
     var ftp = new PromiseFtp();
-    ftp.connect({host: config.ftp.host, user: config.ftp.user, password: config.ftp.password})
+    ftp.connect({host: config.ftp.host, user: config.ftp.user, password: config.ftp.password, connTimeout: config.ftp.conn_timeout})
     .then(function (serverMessage) {
 
         return ftp.list(config.ftp.pdf_folder);
@@ -49,7 +49,7 @@
       
     return new Promise((resolve, reject)  => {
         var ftp = new PromiseFtp();
-        ftp.connect({host: config.ftp.host, user: config.ftp.user, password: config.ftp.password})
+        ftp.connect({host: config.ftp.host, user: config.ftp.user, password: config.ftp.password,  connTimeout: config.ftp.conn_timeout})
         .then(function (serverMessage) {
             return ftp.list(config.ftp.pdf_folder);
         }, (err) => {
@@ -77,7 +77,7 @@
 
                 var file_list = [];
                 var ftp = new PromiseFtp();
-                ftp.connect({host: config.ftp.host, user: config.ftp.user, password: config.ftp.password})
+                ftp.connect({host: config.ftp.host, user: config.ftp.user, password: config.ftp.password, connTimeout: config.ftp.conn_timeout })
                 .then(function (serverMessage) {
                     console.log('Server message: '+serverMessage);
                     return ftp.list(config.ftp.pdf_folder);
@@ -89,7 +89,7 @@
 
                     file_list = list;
                     console.log('list', list);
-                    if (list.length > 0)
+                    if (list && list.length > 0)
                     {
                         console.log('# remote files:', list.length);
                         console.log('filename is', config.ftp.pdf_folder + '/' + list[0].name);

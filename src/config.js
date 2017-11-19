@@ -7,7 +7,8 @@ var config = {
         user: 'morftp',
         password: 'Mor10',
         pdf_folder: '/morftp/PDF',
-        polling_duration: 60000
+        polling_duration: 60000,
+        conn_timeout: 40000
     },
     db: {
         username: 'sa',
@@ -25,8 +26,8 @@ var config = {
         username: 'Studiorm10@gmail.com',
         password: 'stu@i538ndf',
 
-        dev_support_list: 'Yehuda gubbay <ygubbay@gmail.com>, Efrat Gubbay <egubbay@gmail.com>',
-        orders_list: 'Yehuda gubbay <ygubbay@gmail.com>, Efrat Gubbay <egubbay@gmail.com>'
+        dev_support_list: ['Yehuda gubbay <ygubbay@gmail.com>'],
+        orders_list: ['Yehuda gubbay <ygubbay@gmail.com>']
 
     },
     import_folder: '/development/klika/store/import/zip/',
