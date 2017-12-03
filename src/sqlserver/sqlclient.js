@@ -208,6 +208,16 @@ function getSqlData(query_name, sql, is_retry) {
         return getSqlData('getPagedOrders', sql);
     }
 
+
+    function getCountOrders(order_number) 
+    {
+        var sql = `SELECT count(*) as num_orders
+                    FROM [Orders] with (nolock)
+                    WHERE OrderNumber = '${order_number}'`;
+
+            return getSqlData('getCountOrders', sql);
+    }
+
     function getAllOrders() 
     {
         var sql = `SELECT TOP 1000 [OrderId]
@@ -376,3 +386,4 @@ exports.getOrdersByDate = getOrdersByDate;
 exports.updateOrderFile = updateOrderFile;
 exports.getPagedOrders = getPagedOrders;
 exports.getOrderStatuses = getOrderStatuses;
+exports.getCountOrders = getCountOrders;

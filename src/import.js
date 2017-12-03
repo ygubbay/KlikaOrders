@@ -69,8 +69,20 @@ function add_order(order_folder, orderfile_id)
 
             add_order_response = order_rec.xml; // save this for the overall response
 
-            // Insert record into database
-            db.addOrder(order_rec).then((add_order_result) => {
+            db.getCountOrders(order_rec.xml.ORDERNUMBER).then((count_response) => {
+
+                console.log('getCountOrders:', count_response);
+                console.dir(count_response);
+                const existing_order_count = count_response[0].num_orders;
+                if (existing_order_count > 0)
+                {
+                    throw ("Order Number already exists.  OrderNumber=", order_rec.xml.ORDERNUMBER);
+                }
+                else {
+                    // Insert record into database
+                    return db.addOrder(order_rec);
+                }
+            }).then((add_order_result) => {
 
                 console.log('import.js: plain after addOrder');
                 console.log(`addOrder.id: ${JSON.stringify(add_order_result)}, orderfile_id.Id: ${JSON.stringify(orderfile_id)}`);

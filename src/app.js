@@ -28,16 +28,11 @@ var mailer = require('./mail/mailer');
 var file_ops = require('./remove_folder_contents');
 var orders = require('./orders');
 
+// Pdf library
+var pdf_report = require('./pdf/pdf_reporter');
 
 //mailer.SendMail('KlikaOrders started', 'server was started at ' + new Date().toString('yyyyMMdd hhmm'), 'Yehuda gubbay <ygubbay@gmail.com>');
 
-
-//console.log('\nweb server running on port', config.api_port);
-//app.listen(config.api_port);
-
-
-// Pdf library
-//var pdf_report = require('./pdf/pdf_reporter');
 
 //return;
 //pdf_report.DailyOrderPdf();
@@ -78,6 +73,7 @@ var orders = require('./orders');
 var barcode = require('./barcode');
 
 	// immediate poll
+	console.log('initial poll:', new Date());
 	poll_zip_files();
 
 

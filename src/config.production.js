@@ -11,11 +11,11 @@ var config = {
         conn_timeout: 40000
     },
     db: {
-        username: 'sa',
-        password: 'Spawick',
+		username: 'sa',
+        password: 'klikaOrders$R%T',
         server: 'localhost',
-        database: 'KlikaOrders'
-    },
+        database: 'KlikaOrders'    
+	},
     mail: {
         smtp: {
             host: 'smtp.gmail.com',
@@ -30,12 +30,12 @@ var config = {
         orders_list: ['Yehuda gubbay <ygubbay@gmail.com>']
 
     },
-    import_folder: '/development/klika/store/import/zip/',
-    temp_folder: '/development/klika/store/import/current',
-    temp_folder_c: 'c:\\development\\klika\\store\\import\\current\\',
-    orders_folder: 'c:\\development\\klika\\store\\orders\\',
-    archive_folder: 'c:\\development\\klika\\store\\importfiles\\',
-    errors_folder: 'c:\\development\\klika\\store\\errorfiles\\',
+    import_folder: '/klika/store/import/zip/',
+    temp_folder: '/klika/store/import/current',
+    temp_folder_c: 'c:\\klika\\store\\import\\current\\',
+    orders_folder: 'c:\\klika\\store\\orders\\',
+    archive_folder: 'c:\\klika\\store\\importfiles\\',
+    errors_folder: 'c:\\klika\\store\\errorfiles\\',
     pdf_files_folder: '../../store/pdffiles/',
     barcodes_folder: '../../store/barcodes/',
     fonts_folder: '../assets/fonts/'
