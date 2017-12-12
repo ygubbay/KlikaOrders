@@ -21,6 +21,12 @@ function GetOrdersByDate(orders_date)
     return db.getOrdersByDate(orders_date);
 }
 
+
+function get_order_printcode(order_number) 
+{
+    return db.getPrintCodeByOrderNumber(order_number);
+}
+
 function get_order_folder(order_date) {
 
 //  /Orders/yyyy/MM
@@ -344,3 +350,4 @@ exports.GetOrderCoverFile = GetOrderCoverFile;
 exports.GetBarcodeFile = GetBarcodeFile;
 exports.GetOrderMonthFolder = GetOrderMonthFolder;
 exports.GetCurrentOrderType = GetCurrentOrderType;
+exports.GetOrderPrintCode = get_order_printcode;

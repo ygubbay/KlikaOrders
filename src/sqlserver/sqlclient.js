@@ -372,7 +372,17 @@ function getOrdersByDate(orders_date)
 
 
 
-   
+   function getPrintCodeByOrderNumber(order_number) 
+   {
+        var sql = `SELECT TOP 1 p.*
+                    FROM [Orders] o
+                    inner join printcodes p on p.id = o.alumtype
+                    where o.OrderNumber = '${order_number}'`;
+
+        console.log('getHotFolderByOrderNumber sql: ', sql);
+        return getSqlData('getHotFolderByOrderNumber', sql);
+
+   }
 
 exports.updateOrderFileStatus = updateOrderFileStatus;
 exports.updateOrderStatus = updateOrderStatus;
@@ -387,3 +397,4 @@ exports.updateOrderFile = updateOrderFile;
 exports.getPagedOrders = getPagedOrders;
 exports.getOrderStatuses = getOrderStatuses;
 exports.getCountOrders = getCountOrders;
+exports.getPrintCodeByOrderNumber = getPrintCodeByOrderNumber;

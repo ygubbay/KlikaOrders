@@ -111,8 +111,29 @@ function copy_file(file1, file2) {
   return fs_extra.copy(file1, file2);
 }
 
+
+function copy_folder(folder1, folder2)
+{
+
+  return new Promise((resolve, reject) => {
+      
+      fs_extra.copy(folder1, folder2, err => {
+
+        if (err) {
+          console.error(err)
+          reject(err);
+        }
+        resolve('OK');
+      });
+  
+  })
+}
+
+
 exports.DeleteFile = deleteFile;
 exports.RemoveFolderContents = deleteFolderRecursive;
 exports.MoveFolder = move_folder_contents;
 exports.MoveFileToFolder = move_file_to_folder;
 exports.CopyFile = copy_file;
+exports.CopyFolder = copy_folder;  // promise
+

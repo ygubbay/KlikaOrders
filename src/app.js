@@ -157,7 +157,7 @@ function poll_zip_files() {
 					${err.Type ? err.Type.Name: ''} - ${err.Message ? err.Message: ''}`;
 
 		console.log(msg);
-		mailer.SendDevMail('Klika Order error', msg);
+		//mailer.SendDevMail('Klika Order error', msg);
 		executing_poll_zip_files = false;
 		return;
 
@@ -168,6 +168,8 @@ function poll_zip_files() {
 function do_next_file(file_found) {
 
 	let do_response = { file: file_found };
+	let order_rec;
+	let order_file_id;
 
 	return new Promise((resolve, reject) => {
 
@@ -180,15 +182,21 @@ function do_next_file(file_found) {
 			do_response = { order: response };
 			console.dir(response);
 			
-			// move current order to orders folder
-			//file_ops.RemoveFolderContents(orders.GetOrderTopFolder(response.order_rec));  // override order if exists
+			order_rec = response.order_rec;
+			order_file_id = response.order_file_id[0].Id;
 
-			console.log('move contents of folder,', config.temp_folder_c, 'to', orders.GetOrderMonthFolder(response.order_rec));
-			file_ops.MoveFolder(config.temp_folder_c, orders.GetOrderMonthFolder(response.order_rec));
+			console.log('move contents of folder,', config.temp_folder_c, 'to', orders.GetOrderMonthFolder(order_rec));
+			file_ops.MoveFolder(config.temp_folder_c, orders.GetOrderMonthFolder(order_rec));
 			console.log('move to orders folder completed');
 
-			console.log('SetOrderStatusComplete: orderid', response.order_rec.OrderId, response.order_file_id[0])
-			return orders.SetOrderStatusComplete(response.order_rec.OrderId, response.order_file_id[0].Id);
+			return CopyToHotFolder(order_rec);
+		}).then((move_response) => {
+
+			// Set order status
+
+			console.log('SetOrderStatusComplete: orderid', order_rec.OrderId, order_file_id)
+			return orders.SetOrderStatusComplete(order_rec.OrderId, order_file_id);
+
 		}).then((order_complete_response) => {
 			
 			var success_msg = `File processed successfully: 
@@ -198,10 +206,7 @@ function do_next_file(file_found) {
 
 			mailer.SendDevMail('Klika Order imported', success_msg);
 
-			//file_ops.RemoveFolderContents(config.import_folder);
-			//file_ops.RemoveFolderContents(config.temp_folder);
-			// write remote ack file
-
+			
 
 			resolve(do_response);
 			return;
@@ -379,4 +384,58 @@ function import_zip_file(zip_file) {
 		});
 	})
 	}
+}
+
+
+//
+// Copy Order folder from the Store folder to the Hot folder
+//
+function CopyToHotFolder(order_rec) 
+{
+
+	return new Promise((resolve, reject) => {
+
+		// Get PrintCode from db
+		orders.GetOrderPrintCode(order_rec.OrderNumber).then((response) => 
+		{
+			console.log('GetOrderPrintCode:');
+			console.dir(response);
+
+			if (response.length != 1)
+			{
+				throw 'GetOrderPrintCode for order [' + order_rec.OrderNumber + '] did not return a single record.';
+			}
+			const print_code = response[0];
+			const hot_folder_book = print_code.hot_folder_book + '/' + order_rec.TopFolder;
+			let hot_folder_cover = null;
+			if (print_code.is_cover)
+			{
+				hot_folder_cover = print_code.hot_folder_cover + '/' + order_rec.TopFolder;
+			}
+
+			const store_order_folder = orders.GetOrderTopFolder(order_rec);
+
+			let copy_promises = [];
+
+			console.log('CopyFolder: ', store_order_folder, '->', hot_folder_book);
+			copy_promises.push(file_ops.CopyFolder(store_order_folder, hot_folder_book));
+			if (print_code.is_cover)
+			{
+				console.log('CopyFolder: ', store_order_folder, '->', hot_folder_cover);
+				copy_promises.push(file_ops.CopyFolder(store_order_folder, hot_folder_cover));
+			}
+
+			// Copy files to hot folders
+			return Promise.all(copy_promises);
+
+		}).then((copy_response) => {
+
+
+			resolve('OK');
+		}).catch((err) => {
+			console.log(err);
+			reject(err);
+		})
+
+	})
 }

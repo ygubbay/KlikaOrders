@@ -2,6 +2,10 @@ var fs = require('fs');
 var db = require('./sqlserver/sqlclient');
 var err_hdl = require('./error/error_handler');
 
+
+//
+// Read order.xml contents and generate an Order record
+//
 function add_order(order_folder, orderfile_id) 
 {
 
@@ -97,14 +101,10 @@ function add_order(order_folder, orderfile_id)
 
                 reject(err);
             });
-
-           
         });    
-
     })
-
-    
 }
+
 
 function add_import_file(filename)
 {
