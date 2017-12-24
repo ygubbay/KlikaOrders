@@ -30,6 +30,7 @@ var config = {
         orders_list: ['Yehuda gubbay <ygubbay@gmail.com>']
 
     },
+    is_hot_folders_copy: false,
     import_folder: '/development/klika/store/import/zip/',
     temp_folder: '/development/klika/store/import/current',
     temp_folder_c: 'c:\\development\\klika\\store\\import\\current\\',

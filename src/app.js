@@ -395,6 +395,13 @@ function CopyToHotFolder(order_rec)
 
 	return new Promise((resolve, reject) => {
 
+		if (!config.is_hot_folders_copy)
+		{
+			// Skip hot folder copy
+			resolve('OK');
+			return;
+		}
+
 		// Get PrintCode from db
 		orders.GetOrderPrintCode(order_rec.OrderNumber).then((response) => 
 		{

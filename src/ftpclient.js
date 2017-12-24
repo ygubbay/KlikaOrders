@@ -81,7 +81,7 @@
                 .then(function (serverMessage) {
                     console.log('Server message: '+serverMessage);
                     return ftp.list(config.ftp.pdf_folder);
-                }, (err) => {
+                }).catch( (err) => {
                     let msg = 'Error - Could not connect to Ftp:' + err;
                     console.log(msg);
                     reject(msg);
@@ -102,8 +102,7 @@
                                     
                                     console.log('got the file');
                                     resolve(file_list[0]) 
-                                }, 
-                                (err) => {
+                                }).catch((err) => {
                                     let msg = 'Error deleting file ' + file_list[0].name + ' from remote folder';
                                     reject(err);
                                 });
@@ -112,7 +111,7 @@
                             stream.once('error', reject);
                             stream.pipe(fs.createWriteStream(config.import_folder + file_list[0].name));
                         
-                        }, (err) => {
+                        }).catch( (err) => {
                     
 
                             let msg = 'Error doing a get on file' + file_list[0].name + ', ' + err;
@@ -128,6 +127,10 @@
                         reject('no files found');
                         
                     }
+                }).catch( (err) => {
+                    let msg = 'Error - Could not get FTP file list ' + err;
+                    console.log(msg);
+                    reject(msg);
                 })
             })
     }
