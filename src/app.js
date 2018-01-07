@@ -194,6 +194,7 @@ function do_next_file(file_found) {
 
 			// Set order status
 
+			orders.SendOrderStatusToKlika(order_rec.OrderNumber, orders.ORDER_STATUS.READY);  // order imported successfully
 			console.log('SetOrderStatusComplete: orderid', order_rec.OrderId, order_file_id)
 			return orders.SetOrderStatusComplete(order_rec.OrderId, order_file_id);
 
@@ -265,6 +266,7 @@ function import_zip_file(zip_file) {
 				// import Order to database
 				importer.AddOrder(config.temp_folder, order_file_id).then((order_rec) => {
 
+					orders.SendOrderStatusToKlika(order_rec.OrderNumber, orders.ORDER_STATUS.RECEIVED);  // order imported successfully
 					add_order_rec = order_rec;
 					console.log(`zip added to db [${orders_file}]`)					
 

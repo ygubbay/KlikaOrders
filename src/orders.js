@@ -2,7 +2,7 @@ var fs = require('fs');
 var config = require('./config');
 var db = require('./sqlserver/sqlclient');
 var err_hdl = require('./error/error_handler');
-
+var axios = require('axios');
 
 
 function GetOrder(order_number)
@@ -203,6 +203,19 @@ function get_current_canvas_file()
 
 }
 
+function SendOrderStatusToKlika(order_number, status_id) 
+{
+    console.log('SendOrderStatusToKlika start...')
+    axios.post('http://admin.fgv3.co.il/api/Mor/UpdateStatus', {
+        "id": order_number, "statusId": status_id})
+    .then(function (response) {
+        console.log("POST Order ok: " + JSON.stringify(response));
+    })
+    .catch(function (error) {
+        console.log("POST Order error: " + JSON.stringify(error));
+    });
+}
+
 
 
 function SetOrderStatusFailed(order_id, orderfile_id) 
@@ -327,6 +340,15 @@ ORDER_TYPE = {
     CANVAS: 4
 }
 
+ORDER_STATUS = {
+    RECEIVED: 1,
+    READY: 2,
+    ERROR: 3,
+    CANCELLED: 4,
+    PRINTED: 5,
+    SENT: 6
+}
+
 const STUDIO_MOR_COVER_PNG = 'studio_mor_cover.png';
 const STUDIO_MOR_BARCODE_PREFIX = 'studio_mor_barcode'; 
 const STUDIO_MOR_BARCODE_FILE  = STUDIO_MOR_BARCODE_PREFIX + '.png';
@@ -351,3 +373,7 @@ exports.GetBarcodeFile = GetBarcodeFile;
 exports.GetOrderMonthFolder = GetOrderMonthFolder;
 exports.GetCurrentOrderType = GetCurrentOrderType;
 exports.GetOrderPrintCode = get_order_printcode;
+
+
+exports.SendOrderStatusToKlika = SendOrderStatusToKlika;
+exports.ORDER_STATUS = ORDER_STATUS;
