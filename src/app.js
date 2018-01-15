@@ -83,7 +83,7 @@ function poll_zip_files() {
 	// dont run 2 polls
 	if (executing_poll_zip_files) 
 	{
-		console.log(new Date(), 'Polling ftp in progress - aborting scheduled start.');
+		console.log(new Date(), 'Polling ftp - another file in progress - aborting scheduled start.');
 		return;
 	}
 	executing_poll_zip_files = true;
