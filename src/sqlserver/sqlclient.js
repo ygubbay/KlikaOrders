@@ -26,40 +26,40 @@ var Connection = require('tedious').Connection;
                 }
     });
     
-    function connectToSql() {
+    // function connectToSql() {
         
-        console.log('Connecting...');
-        const p = new Promise(function(resolve, reject) {
+    //     console.log('Connecting...');
+    //     const p = new Promise(function(resolve, reject) {
 
 
             
-            connection.on('connect', function(err) {  
+    //         connection.on('connect', function(err) {  
                 
-                if (!err) {
-                    console.log("Connected: ");  
-                    resolve(connection);
-                }
-                else 
-                {
-                    console.log("Connection error: " + err);
-                    reject(new err_hdl.Klika_Error(err_hdl.ERR_DB_ADD_IMPORTFILE, err));
-                }
+    //             if (!err) {
+    //                 console.log("Connected: ");  
+    //                 resolve(connection);
+    //             }
+    //             else 
+    //             {
+    //                 console.log("Connection error: " + err);
+    //                 reject(new err_hdl.Klika_Error(err_hdl.ERR_DB_ADD_IMPORTFILE, err));
+    //             }
                 
-            });
+    //         });
 
-            connection.on('infoMessage', infoError);
-            connection.on('errorMessage', infoError);
-            connection.on('debug', function(text) {
-                console.log(text);
-            })  
+    //         connection.on('infoMessage', infoError);
+    //         connection.on('errorMessage', infoError);
+    //         connection.on('debug', function(text) {
+    //             console.log(text);
+    //         })  
 
-        });
+    //     });
 
-        console.log('connectToSql promise returned');
-        return p;
+    //     console.log('connectToSql promise returned');
+    //     return p;
 
         
-    }
+    // }
 
 
     function infoError(err) {
@@ -70,6 +70,10 @@ var Connection = require('tedious').Connection;
     var TYPES = require('tedious').TYPES;  
 
 
+function isConnectionLoggedIn() 
+{
+    return connection.state.name == 'LoggedIn';
+}
 
 
 function getSqlData(query_name, sql, is_retry) {  
@@ -168,32 +172,36 @@ function getSqlData(query_name, sql, is_retry) {
                         ,[OrderStatusId]
                         ,TopFolder)
                     VALUES
-                        ('${order.xml.ORDERNUMBER[0]}'
-                        ,'${order.xml.OPERATORID}'
-                        ,'${order.xml.ALUM_TYPE}'
-                        ,'${order.xml.campaignName}'
-                        ,'${order.xml.voucher}'
-                        ,'${order.xml.voucher_sam}'
-                        ,'${order.xml.language}'
-                        ,${order.xml.quantity}
-                        ,'${order.xml.Name}'
-                        ,'${order.xml.Address}'
-                        ,'${order.xml.PhoneNumber}'
-                        ,'${order.xml.FileName1}'
-                        ,'${order.xml.FileName2 ? order.xml.FileName2: ''}'
-                        ,'${order.xml.ShippingType}'
-                        ,'${order.xml.ShippingAddress}'
-                        ,'${order.xml.mail}'
-                        ,'${order.xml.date + ' ' + order.xml.time}'
-                        ,'${order.xml.total}'
+                        ('${cleanSqlString(order.xml.ORDERNUMBER[0])}'
+                        ,'${cleanSqlString(order.xml.OPERATORID)}'
+                        ,'${cleanSqlString(order.xml.ALUM_TYPE)}'
+                        ,'${cleanSqlString(order.xml.campaignName)}'
+                        ,'${cleanSqlString(order.xml.voucher)}'
+                        ,'${cleanSqlString(order.xml.voucher_sam)}'
+                        ,'${cleanSqlString(order.xml.language)}'
+                        ,${cleanSqlString(order.xml.quantity)}
+                        ,'${cleanSqlString(order.xml.Name)}'
+                        ,'${cleanSqlString(order.xml.Address)}'
+                        ,'${cleanSqlString(order.xml.PhoneNumber)}'
+                        ,'${cleanSqlString(order.xml.FileName1)}'
+                        ,'${cleanSqlString(order.xml.FileName2) ? cleanSqlString(order.xml.FileName2): ''}'
+                        ,'${cleanSqlString(order.xml.ShippingType)}'
+                        ,'${cleanSqlString(order.xml.ShippingAddress)}'
+                        ,'${cleanSqlString(order.xml.mail)}'
+                        ,'${cleanSqlString(order.xml.date) + ' ' + cleanSqlString(order.xml.time)}'
+                        ,'${cleanSqlString(order.xml.total)}'
                         ,1
-                        ,'${order.xml.TopFolder}');
+                        ,'${cleanSqlString(order.xml.TopFolder)}');
                         select @@identity as Id`;
         console.log(sql);
         return getSqlData('addOrder', sql);                        
     }
 
-
+    function cleanSqlString(input) 
+    {
+        const str_input = input + '';
+        return str_input.replace("'", "''");
+    }
 
     function getPagedOrders(page_index, page_size) 
     {
@@ -398,3 +406,4 @@ exports.getPagedOrders = getPagedOrders;
 exports.getOrderStatuses = getOrderStatuses;
 exports.getCountOrders = getCountOrders;
 exports.getPrintCodeByOrderNumber = getPrintCodeByOrderNumber;
+exports.isConnectionLoggedIn = isConnectionLoggedIn;

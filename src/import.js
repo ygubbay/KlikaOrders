@@ -78,9 +78,10 @@ function add_order(order_folder, orderfile_id)
                 console.log('getCountOrders:', count_response);
                 console.dir(count_response);
                 const existing_order_count = count_response[0].num_orders;
+                console.log('existing_order_count:', existing_order_count);
                 if (existing_order_count > 0)
                 {
-                    throw ("Order Number already exists.  OrderNumber=", order_rec.xml.ORDERNUMBER);
+                    throw ("Order Number already exists.");
                 }
                 else {
                     // Insert record into database
@@ -89,7 +90,15 @@ function add_order(order_folder, orderfile_id)
             }).then((add_order_result) => {
 
                 console.log('import.js: plain after addOrder');
-                console.log(`addOrder.id: ${JSON.stringify(add_order_result)}, orderfile_id.Id: ${JSON.stringify(orderfile_id)}`);
+                console.log(`addOrder.id: ${JSON.stringify(add_order_result)}, orderfile_id.Id: ${JSON.stringify(orderfile_id)}`);          
+                
+                // check addOrder result
+                if (!add_order_result || add_order_result.length == 0) 
+                {
+                    throw('Insert into Orders table failed.  See log for more details.');
+                }
+
+                
 
                 // Update the orderfile record with the orderid
                 return db.updateOrderFile(orderfile_id[0].Id, add_order_result[0].Id);
@@ -99,6 +108,7 @@ function add_order(order_folder, orderfile_id)
                 resolve( add_order_response );
             }).catch((err) => {
 
+                
                 reject(err);
             });
         });    

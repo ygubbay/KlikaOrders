@@ -19,6 +19,11 @@ app.use(function(req, res, next) {
 });
 
 
+// check db connection
+//var db = require('./sqlserver/sqlclient');
+//db.waitForConnectionLogin();
+
+
 // api
 var routes = require('./routes');
 app.use('/', routes);
@@ -54,6 +59,32 @@ var importer = require('./import');
 // app server
 var err_hdl = require('./error/error_handler');
 
+var orders = require('./orders');
+var barcode = require('./barcode');
+
+
+// Debug error file
+// setTimeout(() => {
+
+// 	var test_file = 'G_1006242.zip';
+// 	do_next_file(test_file).then((response) => {
+
+// 		console.log('Processing completed on file: ', test_file);
+// 		return;
+// 	}).catch((err) => {
+
+
+// 		console.log('Error processing file: ', test_file);
+// 		return;
+// 	})
+
+// }, 5000);
+
+
+// return;
+
+
+
 
 	// Daily tasks
      cron.schedule('* 8 * * 1,2,3,4,5', () => {
@@ -69,8 +100,6 @@ var err_hdl = require('./error/error_handler');
 	 	poll_zip_files();
      });
 
-var orders = require('./orders');
-var barcode = require('./barcode');
 
 	// immediate poll
 	console.log('initial poll:', new Date());
@@ -235,7 +264,7 @@ function do_next_file(file_found) {
 
 function import_zip_file(zip_file) {
 
-	{
+	
 	console.log('import_zip_file zip_file=' + zip_file)
 	let filename = '';
 	let order_file_id = 2;
@@ -385,7 +414,7 @@ function import_zip_file(zip_file) {
 			return;
 		});
 	})
-	}
+	
 }
 
 
