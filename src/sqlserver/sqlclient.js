@@ -199,8 +199,8 @@ function getSqlData(query_name, sql, is_retry) {
 
     function cleanSqlString(input) 
     {
-        const str_input = input + '';
-        return str_input.replace("'", "''");
+    const str_input = input + '';
+    return str_input.replace(/'/gi, "''");
     }
 
     function getPagedOrders(page_index, page_size) 
