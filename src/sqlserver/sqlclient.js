@@ -150,6 +150,19 @@ function getSqlData(query_name, sql, is_retry) {
 
     function addOrder(order) {
 
+
+        // calculate num_of_pages
+        var alum_type = cleanSqlString(order.xml.ALUM_TYPE);
+		
+		console.log('alum_type: ', alum_type);
+        var last_pos = alum_type.lastIndexOf('_') + 1;
+        var num_of_page_str = alum_type.substring(last_pos);
+		console.log('num_of_page_str: ', num_of_page_str);
+        var num_of_pages = 0;
+        if (!isNaN(num_of_page_str))
+            num_of_pages = parseInt(num_of_page_str);
+
+		
         var sql = `INSERT INTO [dbo].[Orders]
                         ([OrderNumber]
                         ,[OperatorId]
@@ -170,7 +183,8 @@ function getSqlData(query_name, sql, is_retry) {
                         ,[OrderDate]
                         ,[Total]
                         ,[OrderStatusId]
-                        ,TopFolder)
+                        ,TopFolder
+                        ,num_of_pages)
                     VALUES
                         ('${cleanSqlString(order.xml.ORDERNUMBER[0])}'
                         ,'${cleanSqlString(order.xml.OPERATORID)}'
@@ -191,7 +205,8 @@ function getSqlData(query_name, sql, is_retry) {
                         ,'${cleanSqlString(order.xml.date) + ' ' + cleanSqlString(order.xml.time)}'
                         ,'${cleanSqlString(order.xml.total)}'
                         ,1
-                        ,'${cleanSqlString(order.xml.TopFolder)}');
+                        ,'${cleanSqlString(order.xml.TopFolder)}'
+                        ,` + num_of_pages + `);
                         select @@identity as Id`;
         console.log(sql);
         return getSqlData('addOrder', sql);                        
